@@ -1,0 +1,11 @@
+<Solution>
+  <Folder Name="/Apps/">
+  </Folder>
+  <Folder Name="/Libraries/">
+  </Folder>
+  <Folder Name="/Solution Items/">
+    <File Path=".gitignore" />
+    <File Path="LICENSE" />
+    <File Path="README.md" />
+  </Folder>
+</Solution>
