@@ -6,7 +6,7 @@ namespace TteLcl.Csv2026;
 /// Buffer for one CSV column. This is an abstract base class for typed subclasses
 /// that have formatting knowledge. In casu: <see cref="CsvWriteCell{T}"/>.
 /// </summary>
-public abstract class CsvWriteCell
+public abstract class CsvWriteCell : ICsvWriteCell
 {
   /// <summary>
   /// Create a new CsvWriteCell
@@ -19,21 +19,16 @@ public abstract class CsvWriteCell
     ColumnName = columnName;
   }
 
-  /// <summary>
-  /// The name of the column
-  /// </summary>
+  /// <inheritdoc/>
   public string ColumnName { get; }
 
   /// <summary>
-  /// The string value of the column. Null indicates the cell is not valid.
-  /// Normally set through the Set() method of the typed subclass
+  /// <inheritdoc/>
+  /// This implementation adds a protected setter on top of what the interface requires.
   /// </summary>
   public string? Value { get; protected set; }
 
-  /// <summary>
-  /// Return <see cref="Value"/> as a CSV safe value. If necessary, the value is quoted
-  /// according to CSV quoting rules. If <see cref="Value"/> is null, an exception is thrown.
-  /// </summary>
+  /// <inheritdoc/>
   public string CsvValue {
     get {
       if(Value == null)
@@ -45,9 +40,7 @@ public abstract class CsvWriteCell
     }
   }
 
-  /// <summary>
-  /// Clear the <see cref="Value"/> to null, indicating the cell is not valid.
-  /// </summary>
+  /// <inheritdoc/>
   public void Clear()
   {
     Value = null;
@@ -55,11 +48,13 @@ public abstract class CsvWriteCell
 }
 
 /// <summary>
-/// A stronly typed <see cref="CsvWriteCell"/> subclass, defining a Set() method to
+/// A strongly typed <see cref="CsvWriteCell"/> subclass, defining a Set() method to
 /// set the string value from the typed value.
 /// </summary>
-/// <typeparam name="T"></typeparam>
-public class CsvWriteCell<T>: CsvWriteCell
+/// <typeparam name="T">
+/// The type used as source for the value.
+/// </typeparam>
+public class CsvWriteCell<T>: CsvWriteCell, ICsvWriteCell<T>
 {
   private readonly Func<T, string> _formatter;
 
@@ -77,11 +72,7 @@ public class CsvWriteCell<T>: CsvWriteCell
     _formatter = formatter;
   }
 
-  /// <summary>
-  /// Set the cell <see cref="CsvWriteCell.Value"/> to a formatted version 
-  /// of <paramref name="t"/>
-  /// </summary>
-  /// <param name="t"></param>
+  /// <inheritdoc/>
   public void Set(T t)
   {
     Value = _formatter(t);

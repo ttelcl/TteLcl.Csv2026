@@ -11,7 +11,7 @@ namespace TteLcl.Csv2026;
 /// </summary>
 public class CsvWriteRow
 {
-  private readonly List<CsvWriteCell> _cells;
+  private readonly List<ICsvWriteCell> _cells;
   private bool _locked;
 
   /// <summary>
@@ -22,7 +22,7 @@ public class CsvWriteRow
   /// </summary>
   public CsvWriteRow()
   {
-    _cells = new List<CsvWriteCell>();
+    _cells = new List<ICsvWriteCell>();
     Cells = _cells.AsReadOnly();
     _locked = false;
   }
@@ -59,7 +59,7 @@ public class CsvWriteRow
   }
 
   /// <summary>
-  /// Write the current row  to the <paramref name="output"/> and <see cref="Clear"/> this buffer.
+  /// Write the current row to the <paramref name="output"/> and <see cref="Clear"/> this buffer.
   /// If not already done so, this also <see cref="Lock"/>s this buffer first.
   /// </summary>
   /// <param name="output"></param>
@@ -95,7 +95,7 @@ public class CsvWriteRow
   /// <summary>
   /// A read-only view on the ordered list of cells (columns)
   /// </summary>
-  public IReadOnlyList<CsvWriteCell> Cells { get; }
+  public IReadOnlyList<ICsvWriteCell> Cells { get; }
 
   /// <summary>
   /// Return the number of columns (cells) for this row
@@ -103,10 +103,10 @@ public class CsvWriteRow
   public int Count => _cells.Count;
 
   /// <summary>
-  /// Add a new <see cref="CsvWriteCell"/> for writing strings.
+  /// Add a new <see cref="ICsvWriteCell"/> for writing strings.
   /// Set(null) will set the value to an empty string.
   /// </summary>
-  public CsvWriteCell<string?> AddStringCell(string columnName)
+  public ICsvWriteCell<string?> AddStringCell(string columnName)
   {
     return Add(new CsvWriteCell<string?>(
         columnName,
@@ -114,9 +114,9 @@ public class CsvWriteRow
   }
 
   /// <summary>
-  /// Add a new <see cref="CsvWriteCell"/> for writing integers.
+  /// Add a new <see cref="ICsvWriteCell"/> for writing integers.
   /// </summary>
-  public CsvWriteCell<long> AddIntegerCell(string columnName)
+  public ICsvWriteCell<long> AddIntegerCell(string columnName)
   {
     return Add(new CsvWriteCell<long>(
         columnName,
@@ -124,10 +124,10 @@ public class CsvWriteRow
   }
 
   /// <summary>
-  /// Add a new <see cref="CsvWriteCell"/> for writing floating point values in the default
+  /// Add a new <see cref="ICsvWriteCell"/> for writing floating point values in the default
   /// invariant culture format.
   /// </summary>
-  public CsvWriteCell<double> AddFloatingPointCell(string columnName)
+  public ICsvWriteCell<double> AddFloatingPointCell(string columnName)
   {
     return Add(new CsvWriteCell<double>(
         columnName,
@@ -135,10 +135,10 @@ public class CsvWriteRow
   }
 
   /// <summary>
-  /// Add a new <see cref="CsvWriteCell"/> for writing floating point values using
+  /// Add a new <see cref="ICsvWriteCell"/> for writing floating point values using
   /// the specified format and invariant culture.
   /// </summary>
-  public CsvWriteCell<double> AddFloatingPointCell(string columnName, string format)
+  public ICsvWriteCell<double> AddFloatingPointCell(string columnName, string format)
   {
     return Add(new CsvWriteCell<double>(
         columnName,
@@ -146,10 +146,10 @@ public class CsvWriteRow
   }
 
   /// <summary>
-  /// Add a new <see cref="CsvWriteCell"/> for writing boolean values, writing
+  /// Add a new <see cref="ICsvWriteCell"/> for writing boolean values, writing
   /// <paramref name="trueText"/> for true values and <paramref name="falseText"/> for false values.
   /// </summary>
-  public CsvWriteCell<bool> AddBooleanCell(string columnName, string trueText, string falseText)
+  public ICsvWriteCell<bool> AddBooleanCell(string columnName, string trueText, string falseText)
   {
     return Add(new CsvWriteCell<bool>(
         columnName,
@@ -157,19 +157,18 @@ public class CsvWriteRow
   }
 
   /// <summary>
-  /// Add a new <see cref="CsvWriteCell"/> for writing boolean values, writing
+  /// Add a new <see cref="ICsvWriteCell"/> for writing boolean values, writing
   /// "true" for true values and "false" for false values.
   /// </summary>
-  public CsvWriteCell<bool> AddBooleanCell(string columnName)
+  public ICsvWriteCell<bool> AddBooleanCell(string columnName)
   {
     return AddBooleanCell(columnName, "true", "false");
   }
 
   /// <summary>
-  /// Add a new <see cref="CsvWriteCell"/> for writing enum values.
+  /// Add a new <see cref="ICsvWriteCell"/> for writing enum values.
   /// </summary>
-  public CsvWriteCell<TEnum> AddEnumCell<TEnum>(string columnName)
-      where TEnum : Enum
+  public ICsvWriteCell<TEnum> AddEnumCell<TEnum>(string columnName) where TEnum : Enum
   {
     return Add(new CsvWriteCell<TEnum>(
         columnName,
@@ -177,11 +176,11 @@ public class CsvWriteRow
   }
 
   /// <summary>
-  /// Add a new <see cref="CsvWriteCell"/> for writing objects using their default
+  /// Add a new <see cref="ICsvWriteCell"/> for writing objects using their default
   /// <see cref="object.ToString"/> implementation and converting null values to an empty
   /// string.
   /// </summary>
-  public CsvWriteCell<object?> AddObjectCell(string columnName)
+  public ICsvWriteCell<object?> AddObjectCell(string columnName)
   {
     return Add(new CsvWriteCell<object?>(
         columnName,
@@ -194,7 +193,7 @@ public class CsvWriteRow
   /// <param name="cell"></param>
   /// <returns></returns>
   /// <exception cref="InvalidOperationException"></exception>
-  public CsvWriteCell Add(CsvWriteCell cell)
+  public ICsvWriteCell Add(ICsvWriteCell cell)
   {
     if(_locked)
     {
@@ -208,7 +207,7 @@ public class CsvWriteRow
   /// <summary>
   /// Add a typed cell
   /// </summary>
-  public CsvWriteCell<T> Add<T>(CsvWriteCell<T> cell)
+  public ICsvWriteCell<T> Add<T>(ICsvWriteCell<T> cell)
   {
     if(_locked)
     {
