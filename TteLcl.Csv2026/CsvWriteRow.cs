@@ -23,6 +23,7 @@ public class CsvWriteRow
   public CsvWriteRow()
   {
     _cells = new List<CsvWriteCell>();
+    Cells = _cells.AsReadOnly();
     _locked = false;
   }
 
@@ -92,13 +93,9 @@ public class CsvWriteRow
   }
 
   /// <summary>
-  /// Return the cell at the given index
+  /// A read-only view on the ordered list of cells (columns)
   /// </summary>
-  /// <param name="i"></param>
-  /// <returns></returns>
-  public CsvWriteCell this[int i] {
-    get => _cells[i];
-  }
+  public IReadOnlyList<CsvWriteCell> Cells { get; }
 
   /// <summary>
   /// Return the number of columns (cells) for this row
@@ -115,7 +112,6 @@ public class CsvWriteRow
         columnName,
         s => s ?? String.Empty));
   }
-
 
   /// <summary>
   /// Add a new <see cref="CsvWriteCell"/> for writing integers.
