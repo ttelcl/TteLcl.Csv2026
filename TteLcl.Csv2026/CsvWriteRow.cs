@@ -109,11 +109,11 @@ public class CsvWriteRow
   /// Add a new <see cref="CsvWriteCell"/> for writing strings.
   /// Set(null) will set the value to an empty string.
   /// </summary>
-  public CsvWriteCell<string> AddStringCell(string columnName)
+  public CsvWriteCell<string?> AddStringCell(string columnName)
   {
-    return Add(new CsvWriteCell<string>(
+    return Add(new CsvWriteCell<string?>(
         columnName,
-        s => s == null ? string.Empty : s));
+        s => s ?? String.Empty));
   }
 
 
@@ -185,11 +185,11 @@ public class CsvWriteRow
   /// <see cref="object.ToString"/> implementation and converting null values to an empty
   /// string.
   /// </summary>
-  public CsvWriteCell<object> AddObjectCell(string columnName)
+  public CsvWriteCell<object?> AddObjectCell(string columnName)
   {
-    return Add(new CsvWriteCell<object>(
+    return Add(new CsvWriteCell<object?>(
         columnName,
-        o => o == null ? string.Empty : o.ToString()));
+        o => o == null ? String.Empty : (o.ToString() ?? String.Empty)));
   }
 
   /// <summary>
