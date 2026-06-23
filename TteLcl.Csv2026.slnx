@@ -2,6 +2,7 @@
   <Folder Name="/Apps/">
   </Folder>
   <Folder Name="/Libraries/">
+    <Project Path="TteLcl.Csv2026/TteLcl.Csv2026.csproj" Id="9b50f4df-d86d-44e4-b787-1b293b5dc86b" />
   </Folder>
   <Folder Name="/Solution Items/">
     <File Path=".gitignore" />
